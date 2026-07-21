@@ -3,379 +3,1201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Guru — ICP Lead Filter</title>
+<title>Data Guru - ICP Lead Filter</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; min-height: 100vh; display: flex; justify-content: center; padding: 2rem 1rem; color: #1a1a18; }
-  .wrap { width: 100%; max-width: 680px; }
-  .dg-header { display: flex; align-items: center; gap: 14px; margin-bottom: 2rem; }
-  .dg-logo { width: 48px; height: 48px; border-radius: 12px; background: #dbeafe; display: flex; align-items: center; justify-content: center; }
-  .dg-logo i { font-size: 24px; color: #1d6ab0; }
-  .dg-title { font-size: 22px; font-weight: 600; color: #1a1a18; }
-  .dg-sub { font-size: 13px; color: #6b6b68; margin-top: 2px; }
-  .card { background: #fff; border: 1px solid #e5e5e2; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
-  .card-label { font-size: 11px; font-weight: 600; color: #6b6b68; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
-  .sender-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .sender-btn { padding: 10px; border: 1px solid #e5e5e2; border-radius: 8px; background: #f9f9f7; font-size: 14px; font-weight: 500; color: #6b6b68; cursor: pointer; text-align: center; transition: all 0.15s; }
-  .sender-btn:hover { border-color: #93c5fd; color: #1d6ab0; background: #eff6ff; }
-  .sender-btn.active { background: #dbeafe; border-color: #3b82f6; color: #1d4ed8; font-weight: 600; }
-  .drop { border: 2px dashed #d1d1ce; border-radius: 12px; padding: 2.5rem; text-align: center; cursor: pointer; transition: all 0.15s; background: #fafaf8; }
-  .drop:hover, .drop.drag { border-color: #3b82f6; background: #eff6ff; }
-  .drop i { font-size: 32px; color: #9ca3af; display: block; margin-bottom: 10px; }
-  .drop:hover i, .drop.drag i { color: #3b82f6; }
-  .drop p { font-size: 15px; color: #4b5563; font-weight: 500; }
-  .drop span { font-size: 12px; color: #9ca3af; margin-top: 4px; display: block; }
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1rem; }
-  .stat { background: #fff; border: 1px solid #e5e5e2; border-radius: 10px; padding: 14px; }
-  .stat-label { font-size: 11px; color: #9ca3af; margin-bottom: 6px; font-weight: 500; }
-  .stat-val { font-size: 26px; font-weight: 600; color: #1a1a18; }
-  .stat-val.green { color: #16a34a; }
-  .stat-val.red { color: #dc2626; }
-  .stat-val.blue { color: #1d6ab0; }
-  .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
-  .btn-primary:hover { background: #1d4ed8; }
-  .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #fff; color: #374151; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
-  .btn-secondary:hover { background: #f9fafb; }
-  .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
-  .success-banner { background: #dcfce7; border: 1px solid #86efac; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #15803d; display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-  .error-banner { background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #b91c1c; display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-  .info-banner { background: #eff6ff; border: 1px solid #93c5fd; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #1d4ed8; display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem; }
-  .hidden { display: none; }
-  .tag { display: inline-block; background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; border-radius: 4px; font-size: 11px; font-weight: 500; padding: 2px 8px; margin-right: 4px; margin-top: 6px; }
-  .auth-status { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-top: 8px; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; }
-  .dot.green { background: #16a34a; }
+  :root {
+    --ink: #161714;
+    --muted: #62645e;
+    --quiet: #8a8d84;
+    --line: #deded7;
+    --panel: #ffffff;
+    --paper: #f6f5f0;
+    --wash: #fbfaf6;
+    --blue: #235fe5;
+    --blue-soft: #e8f0ff;
+    --green: #118342;
+    --green-soft: #e7f8ed;
+    --red: #bd2d22;
+    --red-soft: #fdebe8;
+    --amber: #9a5b00;
+    --amber-soft: #fff3d6;
+    --shadow: 0 18px 48px rgba(23, 24, 20, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      linear-gradient(135deg, rgba(35, 95, 229, 0.08), transparent 32rem),
+      linear-gradient(315deg, rgba(17, 131, 66, 0.07), transparent 28rem),
+      var(--paper);
+    color: var(--ink);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding: 24px;
+  }
+
+  button, input { font: inherit; }
+
+  .app {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    background: var(--ink);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow);
+    flex: 0 0 auto;
+  }
+
+  .logo i { font-size: 24px; }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(24px, 3vw, 36px);
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .subtitle {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .shell {
+    display: grid;
+    grid-template-columns: minmax(300px, 420px) 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .panel {
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .panel-section {
+    padding: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .panel-section:last-child { border-bottom: 0; }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .label {
+    color: var(--quiet);
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hint {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .sender-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .sender-btn,
+  .icon-btn,
+  .primary-btn,
+  .secondary-btn {
+    min-height: 42px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease, color 0.12s ease;
+  }
+
+  .sender-btn {
+    background: var(--wash);
+    color: var(--muted);
+    font-weight: 650;
+    text-align: left;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .sender-btn i { color: var(--quiet); }
+  .sender-btn:hover { border-color: #9eb7ff; color: var(--blue); transform: translateY(-1px); }
+  .sender-btn.active { background: var(--blue-soft); border-color: var(--blue); color: #153f9d; }
+  .sender-btn.active i { color: var(--blue); }
+
+  .drop {
+    border: 2px dashed #c9c9c1;
+    border-radius: 8px;
+    min-height: 172px;
+    padding: 26px 18px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    background: var(--wash);
+    cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease;
+  }
+
+  .drop:hover, .drop.drag {
+    border-color: var(--blue);
+    background: var(--blue-soft);
+  }
+
+  .drop-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: #fff;
+    border: 1px solid var(--line);
+    margin: 0 auto 12px;
+  }
+
+  .drop-icon i { color: var(--blue); font-size: 23px; }
+  .drop-title { margin: 0 0 5px; font-size: 15px; font-weight: 750; }
+  .drop-copy { margin: 0; font-size: 12px; color: var(--muted); }
+
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 10px;
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #c4c7bf;
+    flex: 0 0 auto;
+  }
+
+  .dot.green { background: var(--green); }
+
+  .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 12px;
+  }
+
+  .primary-btn,
+  .secondary-btn,
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 700;
+    padding: 0 14px;
+  }
+
+  .primary-btn {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+  }
+
+  .primary-btn:hover { background: #174dc2; transform: translateY(-1px); }
+
+  .secondary-btn, .icon-btn {
+    background: #fff;
+    color: #33352f;
+  }
+
+  .secondary-btn:hover, .icon-btn:hover {
+    border-color: #b8bbb2;
+    background: #fafafa;
+    transform: translateY(-1px);
+  }
+
+  .primary-btn:disabled,
+  .secondary-btn:disabled,
+  .icon-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+    transform: none;
+  }
+
+  .icon-btn {
+    width: 42px;
+    padding: 0;
+  }
+
+  .hidden { display: none !important; }
+
+  .dashboard {
+    display: grid;
+    gap: 14px;
+  }
+
+  .empty-state {
+    min-height: 420px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 38px;
+    color: var(--muted);
+  }
+
+  .empty-state i {
+    font-size: 34px;
+    color: var(--quiet);
+    margin-bottom: 10px;
+  }
+
+  .empty-state strong {
+    display: block;
+    color: var(--ink);
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .stat {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+    min-width: 0;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--quiet);
+    font-weight: 750;
+    margin-bottom: 7px;
+  }
+
+  .stat-value {
+    font-size: clamp(24px, 4vw, 34px);
+    line-height: 1;
+    font-weight: 800;
+  }
+
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.blue { color: var(--blue); }
+
+  .banner {
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    padding: 11px 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+  }
+
+  .banner i { font-size: 18px; margin-top: 1px; }
+  .banner.info { color: #17428f; background: var(--blue-soft); border-color: #bfd0ff; }
+  .banner.success { color: #0f703a; background: var(--green-soft); border-color: #a7dfbd; }
+  .banner.error { color: #9f2219; background: var(--red-soft); border-color: #f1b4ad; }
+  .banner.warn { color: #704200; background: var(--amber-soft); border-color: #f5d58f; }
+
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    border: 1px solid #d8d8d0;
+    background: #fff;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 9px;
+  }
+
+  .tag strong { color: var(--ink); }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    border-bottom: 1px solid var(--line);
+    padding: 10px 10px 0;
+    background: #fff;
+  }
+
+  .tab {
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    font-weight: 750;
+    padding: 10px 11px;
+    cursor: pointer;
+  }
+
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  .table-wrap {
+    overflow: auto;
+    max-height: 430px;
+    background: #fff;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 680px;
+  }
+
+  th, td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    font-size: 13px;
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #fbfbf8;
+    color: var(--quiet);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  td:first-child { font-weight: 750; color: var(--ink); }
+  td { color: var(--muted); }
+
+  .reason {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 999px;
+    padding: 4px 8px;
+    background: #f4f4ef;
+    color: #4d4f49;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .hidden-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media (max-width: 900px) {
+    body { padding: 14px; }
+    .shell { grid-template-columns: 1fr; }
+    .topbar { align-items: flex-start; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 560px) {
+    .topbar { flex-direction: column; }
+    .sender-grid { grid-template-columns: 1fr; }
+    .panel-section { padding: 15px; }
+    .stats { grid-template-columns: 1fr; }
+    .button-row > button { flex: 1 1 100%; }
+    .icon-btn { flex: 0 0 42px; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-
-  <div class="dg-header">
-    <div class="dg-logo"><i class="ti ti-filter-bolt"></i></div>
-    <div>
-      <div class="dg-title">Data Guru</div>
-      <div class="dg-sub">ICP lead filter — The Conversation Store</div>
+<main class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><i class="ti ti-filter-bolt"></i></div>
+      <div>
+        <h1>Data Guru</h1>
+        <div class="subtitle">ICP lead filter for Sales Navigator CSVs</div>
+      </div>
     </div>
+    <button class="secondary-btn" id="signInBtn" type="button" onclick="handleAuthClick()">
+      <i class="ti ti-brand-google"></i>
+      <span>Sign in</span>
+    </button>
+  </header>
+
+  <div class="shell">
+    <section class="panel" aria-label="Import controls">
+      <div class="panel-section">
+        <div class="section-head">
+          <div class="label">Google Sheet</div>
+          <div class="status-row" style="margin-top:0">
+            <span class="dot" id="authDot"></span>
+            <span id="authText">Not connected</span>
+          </div>
+        </div>
+        <p class="hint">Connect only when you want to append the filtered names to the master exclusions sheet.</p>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-head">
+          <div class="label">Sender Account</div>
+          <span class="hint" id="senderHint">Required</span>
+        </div>
+        <div class="sender-grid" id="senderGrid"></div>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-head">
+          <div class="label">Sales Navigator CSV</div>
+          <span class="hint" id="fileHint">No file loaded</span>
+        </div>
+        <div class="drop" id="dropZone" role="button" tabindex="0" onclick="openFilePicker()" onkeydown="handleDropKey(event)" ondragover="handleDrag(event,true)" ondragleave="handleDrag(event,false)" ondrop="handleDrop(event)">
+          <div>
+            <div class="drop-icon" aria-hidden="true"><i class="ti ti-upload"></i></div>
+            <p class="drop-title" id="dropText">Drop CSV here</p>
+            <p class="drop-copy">or click to browse your files</p>
+          </div>
+        </div>
+        <input type="file" id="csvInput" accept=".csv,text/csv" class="hidden-input" onchange="handleFile(this.files[0])">
+      </div>
+
+      <div class="panel-section">
+        <div class="label">Actions</div>
+        <div class="button-row">
+          <button class="primary-btn" id="downloadBtn" type="button" onclick="downloadCSV()" disabled>
+            <i class="ti ti-download"></i>
+            <span>Download clean list</span>
+          </button>
+          <button class="secondary-btn" id="syncBtn" type="button" onclick="syncToSheets()" disabled>
+            <i class="ti ti-table"></i>
+            <span>Sync to Sheet</span>
+          </button>
+          <button class="icon-btn" id="copyBtn" type="button" onclick="copyNames()" disabled title="Copy names" aria-label="Copy qualified names">
+            <i class="ti ti-copy"></i>
+          </button>
+          <button class="icon-btn" id="resetBtn" type="button" onclick="resetApp()" disabled title="Reset" aria-label="Reset app">
+            <i class="ti ti-refresh"></i>
+          </button>
+        </div>
+        <div id="sheetResult" style="margin-top:12px"></div>
+      </div>
+    </section>
+
+    <section class="dashboard" aria-live="polite">
+      <div class="panel" id="emptyState">
+        <div class="empty-state">
+          <div>
+            <i class="ti ti-table-import" aria-hidden="true"></i>
+            <strong>Ready for a CSV</strong>
+            <span>Select a sender, add a Sales Navigator export, and Data Guru will show the clean list plus exclusion reasons.</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="resultsSection" class="hidden">
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Total Rows</div>
+            <div class="stat-value" id="statTotal">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Qualified</div>
+            <div class="stat-value green" id="statQualified">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Excluded</div>
+            <div class="stat-value red" id="statExcluded">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Pass Rate</div>
+            <div class="stat-value blue" id="statRate">0%</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-section">
+            <div class="section-head">
+              <div class="label">Filter Breakdown</div>
+              <span class="hint" id="profileLabel">Default profile</span>
+            </div>
+            <div class="tag-row" id="breakdown"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="tabs" role="tablist" aria-label="Result table">
+            <button class="tab active" id="qualifiedTab" type="button" onclick="setTab('qualified')">Qualified</button>
+            <button class="tab" id="excludedTab" type="button" onclick="setTab('excluded')">Excluded</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Headline</th>
+                  <th>Company</th>
+                  <th>Location</th>
+                  <th id="reasonHead" class="hidden">Reason</th>
+                </tr>
+              </thead>
+              <tbody id="resultBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
+</main>
 
-  <div class="card">
-    <div class="card-label">Google Account</div>
-    <button class="btn-secondary" id="signInBtn" onclick="handleAuthClick()"><i class="ti ti-brand-google"></i> Sign in with Google</button>
-    <div class="auth-status"><div class="dot" id="authDot"></div><span id="authText">Not signed in</span></div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">Sender account</div>
-    <div class="sender-grid">
-      <div class="sender-btn" onclick="selectSender('Josh')" id="s-Josh">Josh</div>
-      <div class="sender-btn" onclick="selectSender('Mike')" id="s-Mike">Mike</div>
-      <div class="sender-btn" onclick="selectSender('Rosie')" id="s-Rosie">Rosie</div>
-      <div class="sender-btn" onclick="selectSender('Shradha')" id="s-Shradha">Shradha</div>
-      <div class="sender-btn" onclick="selectSender('Sara')" id="s-Sara">Sara</div>
-      <div class="sender-btn" onclick="selectSender('Felix')" id="s-Felix">Felix</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">Upload CSV from Sales Navigator</div>
-    <div class="drop" id="dropZone" onclick="document.getElementById('csvInput').click()" ondragover="handleDrag(event,true)" ondragleave="handleDrag(event,false)" ondrop="handleDrop(event)">
-      <i class="ti ti-upload"></i>
-      <p id="dropText">Drop your Sales Navigator CSV here</p>
-      <span>or click to browse</span>
-    </div>
-    <input type="file" id="csvInput" accept=".csv" class="hidden" onchange="handleFile(this.files[0])" />
-  </div>
-
-  <div id="resultsSection" class="hidden">
-    <div class="stats">
-      <div class="stat"><div class="stat-label">Total in CSV</div><div class="stat-val" id="statTotal">0</div></div>
-      <div class="stat"><div class="stat-label">Qualified</div><div class="stat-val green" id="statQualified">0</div></div>
-      <div class="stat"><div class="stat-label">Excluded</div><div class="stat-val red" id="statExcluded">0</div></div>
-      <div class="stat"><div class="stat-label">Pass rate</div><div class="stat-val blue" id="statRate">0%</div></div>
-    </div>
-    <div id="breakdown"></div>
-    <div id="sheetResult"></div>
-    <div class="actions">
-      <button class="btn-primary" onclick="downloadCSV()"><i class="ti ti-download"></i> Download clean list</button>
-      <button class="btn-secondary" id="syncBtn" onclick="syncToSheets()"><i class="ti ti-table"></i> Sync to Google Sheet</button>
-    </div>
-  </div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/google-auth-library@9.0.0/build/src/index.min.js"></script>
 <script>
 const CLIENT_ID = '438223710378-d9qgk6vp1vj6nghrctj4cro6irs9cbvn.apps.googleusercontent.com';
 const SHEET_ID = '116oPw4TmumPaBFSe4TAfVlZ_shlZ3Denx_pfVDlZLsA';
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
-let tokenClient;
+const SENDERS = ['Josh', 'Mike', 'Rosie', 'Shradha', 'Sara', 'Felix'];
+
+let tokenClient = null;
 let accessToken = null;
 let selectedSender = '';
 let qualifiedRows = [];
+let excludedRows = [];
+let currentTab = 'qualified';
+let sourceFileName = '';
+let lastStats = null;
 
 const HARD_EXCLUDE = [
-  'life coach','career','wellness','health coach','mindset',
-  'nutritionist','therapist','psychotherapist','counsell',
-  'financial advisor','financial adviser','wealth manager','ifa ',
-  'mortgage','real estate','estate agent','property agent',
-  'recruitment','recruiter','staffing','talent',
-  'marketing','seo','digital agency','social media',
-  'nonprofit','non-profit','charity','ngo',
-  'e-commerce','ecommerce','product manager',
-  'virtual assistant','admin assistant',
-  'student','graduate','intern',
-  'mlm','network marketing','multi-level',
-  'community manager','community builder',
-  'creative director','graphic designer','copywriter','content creator',
-  'yoga','pilates','personal trainer','fitness',
-  'life sciences','pharmacist','nurse','doctor','physician',
-  'software engineer','developer','data scientist','data analyst',
-  'accountant','bookkeeper','tax advisor',
-  'workplace culture','creative operations',
-  'digital skills','dental','branding',
-  'actioncoach','artificial intelligence',' ai ','.ai',
-  'machine learning','generative ai','llm','chatgpt',
-  'retail','amazon','saas','software','technology','tech',
-  'trust and safety','salon','spa','beauty','media',
-  'restaurant','hospitality','photography','photographer',
-  'interior design','fashion','insurance','sales',
-  'home care','fire & life','life safety','life consulting',
-  'tree of life','secure life','life palette','joblink','job link',
-  'life coach','wellness coach','mindset coach','transformation coach',
+  'life coach', 'career', 'wellness', 'health coach', 'mindset',
+  'nutritionist', 'therapist', 'psychotherapist', 'counsellor', 'counsell',
+  'financial advisor', 'financial adviser', 'wealth manager', 'ifa',
+  'mortgage', 'real estate', 'estate agent', 'property agent',
+  'recruitment', 'recruiter', 'staffing', 'talent',
+  'marketing', 'seo', 'digital agency', 'social media',
+  'nonprofit', 'non-profit', 'charity', 'ngo',
+  'e-commerce', 'ecommerce', 'product manager',
+  'virtual assistant', 'admin assistant',
+  'student', 'graduate', 'intern',
+  'mlm', 'network marketing', 'multi-level',
+  'community manager', 'community builder',
+  'creative director', 'graphic designer', 'copywriter', 'content creator',
+  'yoga', 'pilates', 'personal trainer', 'fitness',
+  'life sciences', 'pharmacist', 'nurse', 'doctor', 'physician',
+  'software engineer', 'developer', 'data scientist', 'data analyst',
+  'accountant', 'bookkeeper', 'tax advisor',
+  'workplace culture', 'creative operations',
+  'digital skills', 'dental', 'branding',
+  'actioncoach', 'artificial intelligence', 'machine learning', 'generative ai', 'llm', 'chatgpt',
+  'retail', 'amazon', 'saas', 'software', 'technology', 'tech',
+  'trust and safety', 'salon', 'spa', 'beauty', 'media',
+  'restaurant', 'hospitality', 'photography', 'photographer',
+  'interior design', 'fashion', 'insurance',
+  'home care', 'fire & life', 'life safety', 'life consulting',
+  'tree of life', 'secure life', 'life palette', 'joblink', 'job link',
+  'wellness coach', 'mindset coach', 'transformation coach'
 ];
 
 const ICP_REQUIRED = [
-  'consultant','consulting','coach','coaching',
-  'advisor','advisory','fractional',
-  'strategist','strategy','mentor',
+  'consultant', 'consulting', 'coach', 'coaching',
+  'advisor', 'advisory', 'fractional',
+  'strategist', 'strategy', 'mentor'
+];
+
+const FELIX_HARD_EXCLUDE = [
+  'life coach', 'career', 'wellness', 'health coach', 'mindset',
+  'nutritionist', 'therapist', 'psychotherapist', 'counsellor', 'counsell',
+  'financial advisor', 'financial adviser', 'wealth manager',
+  'mortgage', 'real estate', 'estate agent',
+  'marketing', 'seo', 'digital agency', 'social media',
+  'nonprofit', 'non-profit', 'charity', 'ngo',
+  'e-commerce', 'ecommerce', 'product manager',
+  'virtual assistant', 'admin assistant',
+  'student', 'graduate', 'intern',
+  'mlm', 'network marketing', 'multi-level',
+  'yoga', 'pilates', 'personal trainer', 'fitness',
+  'life sciences', 'pharmacist', 'nurse', 'doctor', 'physician',
+  'software engineer', 'data scientist', 'data analyst',
+  'accountant', 'bookkeeper', 'tax advisor',
+  'dental', 'salon', 'spa', 'beauty',
+  'restaurant', 'hospitality', 'photography',
+  'interior design', 'fashion', 'insurance',
+  'artificial intelligence', 'machine learning', 'saas'
+];
+
+const FELIX_ICP_REQUIRED = [
+  'staffing', 'recruiting', 'recruitment', 'talent acquisition',
+  'executive search', 'headhunt', 'headhunting', 'search firm',
+  'talent solutions', 'workforce', 'resourcing'
+];
+
+const FELIX_TITLES = [
+  'founder', 'co-founder', 'owner', 'ceo', 'coo', 'cto', 'cpo', 'chro', 'cro',
+  'chief', 'managing director', 'md', 'president'
 ];
 
 const ACTIVE_CLIENTS = new Set([
-  'rosie','marva sadler','andrew miller','connor nielsen','mark taylor','taylor',
-  'sam singh','ann marie nielsen','kay','william','brian enright','susan bond',
-  'kristi perdue','celine mc anenly','gunther wessels','nicole west','satish peddada',
-  'tony birch','rob nielsen','blaire palmer','scott hicks','nate dinet',
-  'edgar rodriguez','gavin bellamy','claes zackrisson','ravi vc','michelle holmes',
-  'kristina katayama','mike moss','john mulligan','marcia erickson','matthew mcsharry',
-  'richard beaumont','caroline mendez','parth kothari','jonathan jamaya-hodges',
-  'sonali nigam','david urban','terri wilson','koukun unosawa','sanaa darif',
-  'talmar anderson','abi walsh','marcus hamaker','shawn walsh','jon spiesman',
-  'tim roberts','mick corrigan','ellis bardsley','victor anaya','rick plasket',
-  'dona kappmeyer','todd rodden','barrett macdonald','warren fiihr','mark francis',
-  'kyle killian','skip balch','joshua bardsley','nicole colwell','menda sims',
-  'daniela goodwin','david quick','felix davies','bill weathersby','jennica dixon',
-  'karen storey','jerry thompson','brandi royster','maria gomez','christen belcher',
-  'mark concannon','drew ferguson','christine hakkola','bill sodeman','justine tindall',
-  'marla moody','usha gubbala','jo dunckley','steve chiama','hank ackerman',
-  'sara orellana','bill lennan','jennifer scheffel','rose sloan','peter santry',
-  'lei wang','josette mandela','nate littlewood','merikay hunt','mark gambale',
-  'maureen fitzgerald','rameez kaleem','sam abazari','scott herbst','moe choice',
-  'wayne brannon','tom lenoble','carlos nouche','aj riedel','meg poag',
-  'reland logan','kamila adamatti','lori kirkland','russ katzman','christian moldenhauer',
-  'colin davis','sam bardsley','steve henry','nikhil','cindy','everardo recendiz',
-  'simon marshall','shannon gregg',
-  'rick merante','samir cepa ar.','chris doig','dan martin','christine altman',
-  'steve potestio','brian reece',
-]);
+  'rosie', 'marva sadler', 'andrew miller', 'connor nielsen', 'mark taylor', 'taylor',
+  'sam singh', 'ann marie nielsen', 'kay', 'william', 'brian enright', 'susan bond',
+  'kristi perdue', 'celine mc anenly', 'gunther wessels', 'nicole west', 'satish peddada',
+  'tony birch', 'rob nielsen', 'blaire palmer', 'scott hicks', 'nate dinet',
+  'edgar rodriguez', 'gavin bellamy', 'claes zackrisson', 'ravi vc', 'michelle holmes',
+  'kristina katayama', 'mike moss', 'john mulligan', 'marcia erickson', 'matthew mcsharry',
+  'richard beaumont', 'caroline mendez', 'parth kothari', 'jonathan jamaya-hodges',
+  'sonali nigam', 'david urban', 'terri wilson', 'koukun unosawa', 'sanaa darif',
+  'talmar anderson', 'abi walsh', 'marcus hamaker', 'shawn walsh', 'jon spiesman',
+  'tim roberts', 'mick corrigan', 'ellis bardsley', 'victor anaya', 'rick plasket',
+  'dona kappmeyer', 'todd rodden', 'barrett macdonald', 'warren fiihr', 'mark francis',
+  'kyle killian', 'skip balch', 'joshua bardsley', 'nicole colwell', 'menda sims',
+  'daniela goodwin', 'david quick', 'felix davies', 'bill weathersby', 'jennica dixon',
+  'karen storey', 'jerry thompson', 'brandi royster', 'maria gomez', 'christen belcher',
+  'mark concannon', 'drew ferguson', 'christine hakkola', 'bill sodeman', 'justine tindall',
+  'marla moody', 'usha gubbala', 'jo dunckley', 'steve chiama', 'hank ackerman',
+  'sara orellana', 'bill lennan', 'jennifer scheffel', 'rose sloan', 'peter santry',
+  'lei wang', 'josette mandela', 'nate littlewood', 'merikay hunt', 'mark gambale',
+  'maureen fitzgerald', 'rameez kaleem', 'sam abazari', 'scott herbst', 'moe choice',
+  'wayne brannon', 'tom lenoble', 'carlos nouche', 'aj riedel', 'meg poag',
+  'reland logan', 'kamila adamatti', 'lori kirkland', 'russ katzman', 'christian moldenhauer',
+  'colin davis', 'sam bardsley', 'steve henry', 'nikhil', 'cindy', 'everardo recendiz',
+  'simon marshall', 'shannon gregg',
+  'rick merante', 'samir cepa ar.', 'chris doig', 'dan martin', 'christine altman',
+  'steve potestio', 'brian reece'
+].map(normalizeName));
+
+const COLUMN_ALIASES = {
+  name: ['full_name', 'Full Name', 'Name', 'full name', 'profile_name'],
+  headline: ['headline', 'Headline', 'Title', 'title'],
+  company: ['current_company', 'Current Company', 'Company', 'companyName'],
+  position: ['current_company_position', 'Current Company Position', 'Position', 'Job Title', 'current_position'],
+  location: ['location_name', 'Location', 'location', 'Geo'],
+  url: ['profile_url', 'Profile URL', 'LinkedIn URL', 'linkedin_url', 'url']
+};
+
+function boot() {
+  renderSenders();
+  configureGoogleControls();
+  updateActionState();
+}
+
+function renderSenders() {
+  document.getElementById('senderGrid').innerHTML = SENDERS.map(name => `
+    <button class="sender-btn" id="s-${name}" type="button" onclick="selectSender('${name}')">
+      <span>${name}</span>
+      <i class="ti ti-user-circle"></i>
+    </button>
+  `).join('');
+}
 
 function initGoogleAuth() {
+  if (!canUseGoogleAuth()) return;
+
+  if (!window.google || !google.accounts || !google.accounts.oauth2) {
+    showMessage('Google sign-in did not load. Open this page in a browser with internet access, then try again.', 'warn');
+    return;
+  }
+
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: SCOPES,
+    error_callback: (error) => {
+      showMessage(error.message || 'Google sign-in was blocked. Use the download button, or open Data Guru from an approved web address.', 'error');
+    },
     callback: (resp) => {
-      if (resp.error) { console.error(resp); return; }
+      if (resp.error) {
+        showMessage(resp.error_description || resp.error, 'error');
+        return;
+      }
       accessToken = resp.access_token;
       document.getElementById('authDot').classList.add('green');
-      document.getElementById('authText').textContent = 'Signed in — sync enabled';
-      document.getElementById('signInBtn').innerHTML = '<i class="ti ti-check"></i> Signed in';
-    },
+      document.getElementById('authText').textContent = 'Connected';
+      document.getElementById('signInBtn').innerHTML = '<i class="ti ti-check"></i><span>Connected</span>';
+      updateActionState();
+    }
   });
 }
 
 function handleAuthClick() {
-  tokenClient.requestAccessToken({ prompt: 'consent' });
+  if (!canUseGoogleAuth()) {
+    showMessage('Google blocks Sheet sync from this File tab. Use the hosted GitHub Pages version instead: https://guru-sheru.github.io/data-guru/', 'warn');
+    return;
+  }
+
+  if (!tokenClient) {
+    showMessage('Google sign-in is still loading. Try again in a moment.', 'warn');
+    return;
+  }
+  tokenClient.requestAccessToken({ prompt: accessToken ? '' : 'consent' });
+}
+
+function canUseGoogleAuth() {
+  return location.protocol === 'http:' || location.protocol === 'https:';
+}
+
+function configureGoogleControls() {
+  if (canUseGoogleAuth()) return;
+
+  document.getElementById('authText').textContent = 'Download-only mode';
+  document.getElementById('signInBtn').innerHTML = '<i class="ti ti-lock"></i><span>Sync locked</span>';
+  showMessage('You opened Data Guru as a File tab, so Google Sheet sync is locked. Use the hosted GitHub Pages version for sync: https://guru-sheru.github.io/data-guru/', 'warn');
 }
 
 function selectSender(name) {
   selectedSender = name;
-  document.querySelectorAll('.sender-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.sender-btn').forEach(button => button.classList.remove('active'));
   document.getElementById('s-' + name).classList.add('active');
+  document.getElementById('senderHint').textContent = name === 'Felix' ? 'Recruiting profile' : 'Default profile';
+  document.getElementById('profileLabel').textContent = name === 'Felix' ? 'Felix recruiting profile' : 'Default consultant profile';
+  if (sourceFileName && lastStats) rerunCurrentFile();
 }
 
-function handleDrag(e, on) { e.preventDefault(); document.getElementById('dropZone').classList.toggle('drag', on); }
-function handleDrop(e) {
-  e.preventDefault();
+function openFilePicker() {
+  document.getElementById('csvInput').click();
+}
+
+function handleDropKey(event) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    openFilePicker();
+  }
+}
+
+function handleDrag(event, on) {
+  event.preventDefault();
+  document.getElementById('dropZone').classList.toggle('drag', on);
+}
+
+function handleDrop(event) {
+  event.preventDefault();
   document.getElementById('dropZone').classList.remove('drag');
-  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  if (event.dataTransfer.files[0]) handleFile(event.dataTransfer.files[0]);
 }
 
 function handleFile(file) {
   if (!file) return;
-  if (!selectedSender) { alert('Please select a sender account first.'); return; }
+  if (!selectedSender) {
+    showMessage('Select a sender account before adding a CSV.', 'warn');
+    return;
+  }
+  if (!file.name.toLowerCase().endsWith('.csv')) {
+    showMessage('Please choose a CSV export from Sales Navigator.', 'error');
+    return;
+  }
+
+  sourceFileName = file.name;
   document.getElementById('dropText').textContent = file.name;
+  document.getElementById('fileHint').textContent = file.name;
+
   const reader = new FileReader();
-  reader.onload = e => processCSV(e.target.result);
+  reader.onload = event => processCSV(event.target.result);
+  reader.onerror = () => showMessage('Could not read that file. Please export it again and retry.', 'error');
   reader.readAsText(file);
 }
 
-function parseCSVLine(line) {
-  const result = []; let cur = ''; let inQ = false;
-  for (let i = 0; i < line.length; i++) {
-    if (line[i] === '"') { inQ = !inQ; }
-    else if (line[i] === ',' && !inQ) { result.push(cur); cur = ''; }
-    else { cur += line[i]; }
-  }
-  result.push(cur); return result;
-}
-
 function parseCSV(text) {
-  const lines = text.split('\n');
-  const headers = parseCSVLine(lines[0]);
-  return lines.slice(1).filter(l => l.trim()).map(l => {
-    const vals = parseCSVLine(l); const obj = {};
-    headers.forEach((h, i) => obj[h.trim()] = (vals[i] || '').trim());
-    return obj;
+  const rows = [];
+  let row = [];
+  let value = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (char === '"' && inQuotes && next === '"') {
+      value += '"';
+      i++;
+    } else if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      row.push(value);
+      value = '';
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && next === '\n') i++;
+      row.push(value);
+      if (row.some(cell => cell.trim() !== '')) rows.push(row);
+      row = [];
+      value = '';
+    } else {
+      value += char;
+    }
+  }
+
+  row.push(value);
+  if (row.some(cell => cell.trim() !== '')) rows.push(row);
+  if (!rows.length) return [];
+
+  const headers = rows[0].map(header => header.trim());
+  return rows.slice(1).map(cells => {
+    const record = {};
+    headers.forEach((header, index) => {
+      record[header] = (cells[index] || '').trim();
+    });
+    return record;
   });
 }
-
-// Felix-specific ICP — staffing and recruiting decision makers
-const FELIX_HARD_EXCLUDE = [
-  'life coach','career','wellness','health coach','mindset',
-  'nutritionist','therapist','psychotherapist','counsell',
-  'financial advisor','financial adviser','wealth manager',
-  'mortgage','real estate','estate agent',
-  'marketing','seo','digital agency','social media',
-  'nonprofit','non-profit','charity','ngo',
-  'e-commerce','ecommerce','product manager',
-  'virtual assistant','admin assistant',
-  'student','graduate','intern',
-  'mlm','network marketing','multi-level',
-  'yoga','pilates','personal trainer','fitness',
-  'life sciences','pharmacist','nurse','doctor','physician',
-  'software engineer','data scientist','data analyst',
-  'accountant','bookkeeper','tax advisor',
-  'dental','salon','spa','beauty',
-  'restaurant','hospitality','photography',
-  'interior design','fashion','insurance',
-  'artificial intelligence',' ai ','.ai','machine learning','saas',
-];
-
-const FELIX_ICP_REQUIRED = [
-  'staffing','recruiting','recruitment','talent acquisition',
-  'executive search','headhunt','headhunting','search firm',
-  'talent solutions','workforce','resourcing',
-];
-
-const FELIX_TITLES = [
-  'founder','co-founder','owner','ceo','coo','cto','cpo','chro','cro',
-  'chief','managing director','md','president',
-];
 
 function processCSV(text) {
-  const rows = parseCSV(text);
+  let rows;
+  try {
+    rows = parseCSV(text);
+  } catch (error) {
+    showMessage('This CSV could not be parsed. Check the export format and retry.', 'error');
+    return;
+  }
+
+  if (!rows.length) {
+    showMessage('No lead rows found in that CSV.', 'warn');
+    return;
+  }
+
   qualifiedRows = [];
-  let excClient = 0, excKw = 0, excNoIcp = 0;
-  const isFelix = selectedSender === 'Felix';
+  excludedRows = [];
+
+  const stats = {
+    activeClient: 0,
+    hardExclude: 0,
+    notIcp: 0,
+    missingName: 0
+  };
 
   rows.forEach(row => {
-    const name = (row['full_name'] || '').toLowerCase().trim();
-    const text = ((row['headline'] || '') + ' ' + (row['current_company_position'] || '') + ' ' + (row['current_company'] || '')).toLowerCase();
-    if (ACTIVE_CLIENTS.has(name)) { excClient++; return; }
+    const enriched = enrichRow(row);
+    const decision = qualifyRow(enriched);
 
-    if (isFelix) {
-      if (FELIX_HARD_EXCLUDE.some(kw => text.includes(kw))) { excKw++; return; }
-      if (!FELIX_ICP_REQUIRED.some(kw => text.includes(kw))) { excNoIcp++; return; }
-      if (!FELIX_TITLES.some(kw => text.includes(kw))) { excNoIcp++; return; }
+    if (decision.pass) {
+      qualifiedRows.push(enriched);
     } else {
-      if (HARD_EXCLUDE.some(kw => text.includes(kw))) { excKw++; return; }
-      if (!ICP_REQUIRED.some(kw => text.includes(kw))) { excNoIcp++; return; }
+      stats[decision.type]++;
+      excludedRows.push({ ...enriched, exclusionReason: decision.reason });
     }
-    qualifiedRows.push(row);
   });
-  const total = rows.length;
+
+  lastStats = stats;
+  renderResults(rows.length, stats);
+  showMessage(`${qualifiedRows.length} qualified leads found from ${rows.length} rows.`, qualifiedRows.length ? 'success' : 'warn');
+}
+
+function enrichRow(row) {
+  return {
+    raw: row,
+    name: pick(row, COLUMN_ALIASES.name),
+    headline: pick(row, COLUMN_ALIASES.headline),
+    company: pick(row, COLUMN_ALIASES.company),
+    position: pick(row, COLUMN_ALIASES.position),
+    location: pick(row, COLUMN_ALIASES.location),
+    url: pick(row, COLUMN_ALIASES.url)
+  };
+}
+
+function pick(row, aliases) {
+  for (const alias of aliases) {
+    if (row[alias]) return row[alias];
+  }
+  const normalized = Object.keys(row).find(key => aliases.some(alias => normalizeHeader(alias) === normalizeHeader(key)));
+  return normalized ? row[normalized] : '';
+}
+
+function qualifyRow(row) {
+  const name = normalizeName(row.name);
+  const searchText = normalizeText(`${row.headline} ${row.position} ${row.company}`);
+
+  if (!name) return { pass: false, type: 'missingName', reason: 'Missing name' };
+  if (ACTIVE_CLIENTS.has(name)) return { pass: false, type: 'activeClient', reason: 'Active client' };
+
+  if (selectedSender === 'Felix') {
+    const hardKeyword = findKeyword(searchText, FELIX_HARD_EXCLUDE);
+    if (hardKeyword) return { pass: false, type: 'hardExclude', reason: `Excluded: ${hardKeyword}` };
+    if (!findKeyword(searchText, FELIX_ICP_REQUIRED)) return { pass: false, type: 'notIcp', reason: 'No recruiting ICP signal' };
+    if (!findKeyword(searchText, FELIX_TITLES)) return { pass: false, type: 'notIcp', reason: 'No decision-maker title' };
+    return { pass: true };
+  }
+
+  const hardKeyword = findKeyword(searchText, HARD_EXCLUDE);
+  if (hardKeyword) return { pass: false, type: 'hardExclude', reason: `Excluded: ${hardKeyword}` };
+  if (!findKeyword(searchText, ICP_REQUIRED)) return { pass: false, type: 'notIcp', reason: 'No consultant ICP signal' };
+  return { pass: true };
+}
+
+function findKeyword(text, keywords) {
+  return keywords.find(keyword => includesKeyword(text, keyword)) || '';
+}
+
+function includesKeyword(text, keyword) {
+  const cleanKeyword = normalizeText(keyword);
+  if (!cleanKeyword) return false;
+  const escaped = cleanKeyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i').test(text);
+}
+
+function normalizeHeader(value) {
+  return String(value).toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function normalizeName(value) {
+  return String(value || '').toLowerCase().replace(/\s+/g, ' ').replace(/[^\p{L}\p{N} .'-]/gu, '').trim();
+}
+
+function normalizeText(value) {
+  return String(value || '').toLowerCase().replace(/[^\p{L}\p{N}#+&.' -]/gu, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function renderResults(total, stats) {
   const qualified = qualifiedRows.length;
-  const rate = total > 0 ? Math.round((qualified / total) * 100) : 0;
+  const excluded = excludedRows.length;
+  const rate = total ? Math.round((qualified / total) * 100) : 0;
+
+  document.getElementById('emptyState').classList.add('hidden');
+  document.getElementById('resultsSection').classList.remove('hidden');
   document.getElementById('statTotal').textContent = total;
   document.getElementById('statQualified').textContent = qualified;
-  document.getElementById('statExcluded').textContent = total - qualified;
-  document.getElementById('statRate').textContent = rate + '%';
-  document.getElementById('breakdown').innerHTML =
-    `<span class="tag">Active clients: ${excClient}</span>` +
-    `<span class="tag">Hard excluded: ${excKw}</span>` +
-    `<span class="tag">Not ICP: ${excNoIcp}</span>`;
-  document.getElementById('resultsSection').classList.remove('hidden');
-  document.getElementById('sheetResult').innerHTML = '';
+  document.getElementById('statExcluded').textContent = excluded;
+  document.getElementById('statRate').textContent = `${rate}%`;
+  document.getElementById('breakdown').innerHTML = `
+    <span class="tag"><i class="ti ti-user-check"></i> Active clients <strong>${stats.activeClient}</strong></span>
+    <span class="tag"><i class="ti ti-ban"></i> Hard excluded <strong>${stats.hardExclude}</strong></span>
+    <span class="tag"><i class="ti ti-filter-off"></i> Not ICP <strong>${stats.notIcp}</strong></span>
+    <span class="tag"><i class="ti ti-alert-triangle"></i> Missing names <strong>${stats.missingName}</strong></span>
+  `;
+
+  currentTab = 'qualified';
+  setTab('qualified');
+  updateActionState();
+}
+
+function setTab(tab) {
+  currentTab = tab;
+  document.getElementById('qualifiedTab').classList.toggle('active', tab === 'qualified');
+  document.getElementById('excludedTab').classList.toggle('active', tab === 'excluded');
+  document.getElementById('reasonHead').classList.toggle('hidden', tab !== 'excluded');
+
+  const rows = tab === 'qualified' ? qualifiedRows : excludedRows;
+  document.getElementById('resultBody').innerHTML = rows.slice(0, 200).map(row => `
+    <tr>
+      <td>${escapeHtml(row.name || 'Unknown')}</td>
+      <td>${escapeHtml(row.headline || row.position || '-')}</td>
+      <td>${escapeHtml(row.company || '-')}</td>
+      <td>${escapeHtml(row.location || '-')}</td>
+      ${tab === 'excluded' ? `<td><span class="reason">${escapeHtml(row.exclusionReason)}</span></td>` : ''}
+    </tr>
+  `).join('') || `
+    <tr>
+      <td colspan="${tab === 'excluded' ? '5' : '4'}">No ${tab} rows to show.</td>
+    </tr>
+  `;
+}
+
+function updateActionState() {
+  const hasRows = qualifiedRows.length > 0;
+  const hasResults = qualifiedRows.length + excludedRows.length > 0;
+  document.getElementById('downloadBtn').disabled = !hasRows;
+  document.getElementById('syncBtn').disabled = !hasRows;
+  document.getElementById('copyBtn').disabled = !hasRows;
+  document.getElementById('resetBtn').disabled = !hasResults && !sourceFileName && !selectedSender;
+}
+
+function buildCsv() {
+  const headers = ['Name', 'Headline', 'Company', 'Position', 'Location', 'LinkedIn URL'];
+  const rows = qualifiedRows.map(row => [
+    row.name,
+    row.headline,
+    row.company,
+    row.position,
+    row.location,
+    row.url
+  ]);
+  return [headers, ...rows].map(csvLine).join('\n');
+}
+
+function csvLine(values) {
+  return values.map(value => `"${String(value || '').replace(/"/g, '""')}"`).join(',');
 }
 
 function downloadCSV() {
   if (!qualifiedRows.length) return;
-  const headers = ['Name','Headline','Company','Position','Location','LinkedIn URL'];
-  const rows = qualifiedRows.map(r => [
-    r['full_name']||'', r['headline']||'', r['current_company']||'',
-    r['current_company_position']||'', r['location_name']||'', r['profile_url']||''
-  ]);
-  const csv = [headers,...rows].map(r => r.map(v => '"'+v.replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = selectedSender + '_ICP_Filtered_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
-  setTimeout(resetApp, 1500);
+  const blob = new Blob([buildCsv()], { type: 'text/csv;charset=utf-8' });
+  const link = document.createElement('a');
+  const date = new Date().toISOString().slice(0, 10);
+  link.href = URL.createObjectURL(blob);
+  link.download = `${selectedSender}_ICP_Filtered_${date}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(link.href);
+  showMessage('Clean list downloaded. Your results are still here if you want to sync or review them.', 'success');
+}
+
+async function copyNames() {
+  if (!qualifiedRows.length) return;
+  const names = qualifiedRows.map(row => row.name).filter(Boolean).join('\n');
+  try {
+    await navigator.clipboard.writeText(names);
+    showMessage(`${qualifiedRows.length} qualified names copied.`, 'success');
+  } catch (error) {
+    showMessage('Copy failed in this browser. Download the CSV instead.', 'warn');
+  }
 }
 
 function resetApp() {
-  qualifiedRows = []; selectedSender = '';
-  document.getElementById('dropText').textContent = 'Drop your Sales Navigator CSV here';
+  qualifiedRows = [];
+  excludedRows = [];
+  sourceFileName = '';
+  lastStats = null;
+  selectedSender = '';
+  currentTab = 'qualified';
+
+  document.getElementById('dropText').textContent = 'Drop CSV here';
+  document.getElementById('fileHint').textContent = 'No file loaded';
   document.getElementById('csvInput').value = '';
   document.getElementById('resultsSection').classList.add('hidden');
+  document.getElementById('emptyState').classList.remove('hidden');
   document.getElementById('sheetResult').innerHTML = '';
-  document.querySelectorAll('.sender-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('senderHint').textContent = 'Required';
+  document.querySelectorAll('.sender-btn').forEach(button => button.classList.remove('active'));
+  updateActionState();
+}
+
+function rerunCurrentFile() {
+  const file = document.getElementById('csvInput').files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = event => processCSV(event.target.result);
+  reader.readAsText(file);
 }
 
 async function syncToSheets() {
-  if (!accessToken) {
-    document.getElementById('sheetResult').innerHTML = '<div class="info-banner"><i class="ti ti-info-circle"></i> Please sign in with Google first to sync</div>';
+  if (!qualifiedRows.length) return;
+  if (!canUseGoogleAuth()) {
+    showMessage('Sheet sync cannot run from this File tab. Open https://guru-sheru.github.io/data-guru/ and upload the CSV there.', 'warn');
     return;
   }
-  document.getElementById('sheetResult').innerHTML = '<div class="info-banner"><i class="ti ti-loader"></i> Reading existing sheet data...</div>';
+
+  if (!accessToken) {
+    showMessage('Sign in with Google first to sync the filtered names.', 'info');
+    return;
+  }
+
+  showMessage('Checking the master exclusions sheet...', 'info');
+
   try {
     const readRes = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Master%20Exclusions!A:A`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
+
+    if (!readRes.ok) {
+      const error = await readRes.json();
+      throw new Error(error.error?.message || 'Could not read the Google Sheet.');
+    }
+
     const existingData = await readRes.json();
-    const existingNames = new Set((existingData.values||[]).flat().map(n=>n.toLowerCase().trim()));
-    const today = new Date().toISOString().slice(0,10);
+    const existingNames = new Set((existingData.values || []).flat().map(normalizeName));
+    const today = new Date().toISOString().slice(0, 10);
     const newRows = qualifiedRows
-      .map(r => (r['full_name']||'').trim())
-      .filter(n => n && !existingNames.has(n.toLowerCase()))
-      .map(n => [n, selectedSender + ' filtered list', today]);
+      .map(row => row.name.trim())
+      .filter(name => name && !existingNames.has(normalizeName(name)))
+      .map(name => [name, `${selectedSender} filtered list`, today]);
+
     if (!newRows.length) {
-      document.getElementById('sheetResult').innerHTML = '<div class="success-banner"><i class="ti ti-check"></i> Sheet already up to date — no new names to add</div>';
+      showMessage('Sheet already up to date. No new names to add.', 'success');
       return;
     }
+
     const writeRes = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Master%20Exclusions!A1:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
         body: JSON.stringify({ values: newRows })
       }
     );
-    if (writeRes.ok) {
-      document.getElementById('sheetResult').innerHTML = `<div class="success-banner"><i class="ti ti-check"></i> ${newRows.length} names added to Google Sheet</div>`;
-    } else {
-      const err = await writeRes.json();
-      document.getElementById('sheetResult').innerHTML = `<div class="error-banner"><i class="ti ti-alert-circle"></i> ${err.error?.message||'Sheet error'}</div>`;
+
+    if (!writeRes.ok) {
+      const error = await writeRes.json();
+      throw new Error(error.error?.message || 'Could not update the Google Sheet.');
     }
-  } catch(e) {
-    document.getElementById('sheetResult').innerHTML = `<div class="error-banner"><i class="ti ti-alert-circle"></i> ${e.message}</div>`;
+
+    showMessage(`${newRows.length} names added to the Google Sheet.`, 'success');
+  } catch (error) {
+    showMessage(error.message, 'error');
   }
 }
+
+function showMessage(message, type) {
+  const icons = {
+    info: 'ti-info-circle',
+    success: 'ti-check',
+    error: 'ti-alert-circle',
+    warn: 'ti-alert-triangle'
+  };
+  document.getElementById('sheetResult').innerHTML = `
+    <div class="banner ${type}">
+      <i class="ti ${icons[type] || icons.info}"></i>
+      <span>${escapeHtml(message)}</span>
+    </div>
+  `;
+}
+
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  }[char]));
+}
+
+boot();
 </script>
-<script src="https://accounts.google.com/gsi/client" onload="initGoogleAuth()"></script>
+<script src="https://accounts.google.com/gsi/client" async defer onload="initGoogleAuth()"></script>
 </body>
 </html>

@@ -602,6 +602,7 @@
 const CLIENT_ID = '438223710378-d9qgk6vp1vj6nghrctj4cro6irs9cbvn.apps.googleusercontent.com';
 const SHEET_ID = '116oPw4TmumPaBFSe4TAfVlZ_shlZ3Denx_pfVDlZLsA';
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+const HOSTED_APP_URL = 'https://guru-sheru.github.io/data-guru/';
 
 const SENDERS = ['Josh', 'Mike', 'Rosie', 'Shradha', 'Sara', 'Felix', 'Gunter'];
 
@@ -822,7 +823,7 @@ function initGoogleAuth() {
 
 function handleAuthClick() {
   if (!canUseGoogleAuth()) {
-    showMessage('Google blocks Sheet sync from this File tab. Use the hosted GitHub Pages version instead: https://guru-sheru.github.io/data-guru/', 'warn');
+    redirectToHostedApp();
     return;
   }
 
@@ -841,8 +842,13 @@ function configureGoogleControls() {
   if (canUseGoogleAuth()) return;
 
   document.getElementById('authText').textContent = 'Download-only mode';
-  document.getElementById('signInBtn').innerHTML = '<i class="ti ti-lock"></i><span>Sync locked</span>';
-  showMessage('You opened Data Guru as a File tab, so Google Sheet sync is locked. Use the hosted GitHub Pages version for sync: https://guru-sheru.github.io/data-guru/', 'warn');
+  document.getElementById('signInBtn').innerHTML = '<i class="ti ti-external-link"></i><span>Opening web app</span>';
+  showMessage(`Opening the hosted Data Guru app for Google Sheet sync: ${HOSTED_APP_URL}`, 'info');
+  setTimeout(redirectToHostedApp, 700);
+}
+
+function redirectToHostedApp() {
+  window.location.href = HOSTED_APP_URL;
 }
 
 function selectSender(name) {
@@ -1186,7 +1192,7 @@ function rerunCurrentFile() {
 async function syncToSheets() {
   if (!qualifiedRows.length) return;
   if (!canUseGoogleAuth()) {
-    showMessage('Sheet sync cannot run from this File tab. Open https://guru-sheru.github.io/data-guru/ and upload the CSV there.', 'warn');
+    redirectToHostedApp();
     return;
   }
 

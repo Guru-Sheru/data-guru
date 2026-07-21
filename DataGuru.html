@@ -603,7 +603,7 @@ const CLIENT_ID = '438223710378-d9qgk6vp1vj6nghrctj4cro6irs9cbvn.apps.googleuser
 const SHEET_ID = '116oPw4TmumPaBFSe4TAfVlZ_shlZ3Denx_pfVDlZLsA';
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
-const SENDERS = ['Josh', 'Mike', 'Rosie', 'Shradha', 'Sara', 'Felix'];
+const SENDERS = ['Josh', 'Mike', 'Rosie', 'Shradha', 'Sara', 'Felix', 'Gunter'];
 
 let tokenClient = null;
 let accessToken = null;
@@ -682,6 +682,64 @@ const FELIX_TITLES = [
   'chief', 'managing director', 'md', 'president'
 ];
 
+// Gunter / LiquidSMARTS ICP - high-tech healthcare commercial leaders
+const GUNTER_HARD_EXCLUDE = [
+  'sales representative', 'sales rep', 'account executive', 'account exec',
+  'sales development representative', 'sdr', 'business development representative', 'bdr',
+  'sales manager', 'territory manager', 'account manager',
+  'sales trainer', 'sales training', 'sales enablement consultant',
+  'force management', 'corporate visions', 'richardson', 'sandler',
+  'meddic academy', 'valueselling', 'challenger', 'winning by design',
+  'sales performance international', 'wilson learning', 'miller heiman',
+  'korn ferry sales',
+  'health insurance', 'payer', 'payor', 'hospital', 'health system',
+  'integrated delivery network', 'healthcare provider',
+  'veterinary', 'dental practice', 'consumer health', 'd2c',
+  'generic medical supplies', 'medical supplies distributor',
+  'pure consumables', 'consumables distribution',
+  'pre-revenue', 'pre series a', 'pre-series-a',
+  'ecommerce', 'e-commerce'
+];
+
+const GUNTER_ICP_REQUIRED = [
+  'medical device', 'medtech', 'med-tech', 'diagnostic imaging',
+  'surgical system', 'robotic surgery', 'clinical diagnostics',
+  'life sciences', 'healthcare technology', 'health tech', 'healthtech',
+  'healthcare information technology', 'healthcare it', 'hcit',
+  'patient monitoring', 'radiation oncology', 'electrophysiology',
+  'structural heart', 'orthopedics', 'spine', 'endoscopy',
+  'vascular access', 'in vitro diagnostics', 'ivd',
+  'molecular diagnostics', 'point of care diagnostics',
+  'drug delivery', 'combination products', 'connected health',
+  'capital equipment', 'ambulatory surgery center', 'asc',
+  'cell therapy delivery', 'oncology'
+];
+
+const GUNTER_TITLES = [
+  'vp sales', 'vice president of sales', 'chief commercial officer', 'cco',
+  'svp commercial', 'senior vice president commercial',
+  'senior vice president of commercial', 'commercial officer',
+  'general manager', 'gm', 'country manager',
+  'regional vice president', 'rvp', 'area vice president', 'avp',
+  'vp sales enablement', 'vice president sales enablement',
+  'vice president of sales enablement',
+  'vp sales operations', 'vice president sales operations',
+  'vice president of sales operations',
+  'vp marketing', 'vice president marketing', 'vice president of marketing',
+  'commercial leader', 'head of sales', 'head of commercial',
+  'commercial director', 'sales director',
+  'private equity operating partner', 'operating partner',
+  'healthcare consulting partner', 'medtech analyst', 'industry analyst'
+];
+
+const GUNTER_TRIGGER_SIGNALS = [
+  'product launch', 'new product', 'fda clearance', 'de novo',
+  'acquisition', 'divestiture', 'commercial restructure',
+  'new ceo', 'transformation', 'pipeline velocity', 'pipeline conversion',
+  'sales cycle', 'value analysis committee', 'capital cycle',
+  'market share', 'quota', 'board mandate', 'idn', 'asc'
+];
+
 const ACTIVE_CLIENTS = new Set([
   'rosie', 'marva sadler', 'andrew miller', 'connor nielsen', 'mark taylor', 'taylor',
   'sam singh', 'ann marie nielsen', 'kay', 'william', 'brian enright', 'susan bond',
@@ -705,7 +763,7 @@ const ACTIVE_CLIENTS = new Set([
   'wayne brannon', 'tom lenoble', 'carlos nouche', 'aj riedel', 'meg poag',
   'reland logan', 'kamila adamatti', 'lori kirkland', 'russ katzman', 'christian moldenhauer',
   'colin davis', 'sam bardsley', 'steve henry', 'nikhil', 'cindy', 'everardo recendiz',
-  'simon marshall', 'shannon gregg',
+  'simon marshall', 'shannon gregg', 'gunter wessels', 'dr gunter wessels',
   'rick merante', 'samir cepa ar.', 'chris doig', 'dan martin', 'christine altman',
   'steve potestio', 'brian reece'
 ].map(normalizeName));
@@ -791,9 +849,16 @@ function selectSender(name) {
   selectedSender = name;
   document.querySelectorAll('.sender-btn').forEach(button => button.classList.remove('active'));
   document.getElementById('s-' + name).classList.add('active');
-  document.getElementById('senderHint').textContent = name === 'Felix' ? 'Recruiting profile' : 'Default profile';
-  document.getElementById('profileLabel').textContent = name === 'Felix' ? 'Felix recruiting profile' : 'Default consultant profile';
+  const profileName = getProfileName(name);
+  document.getElementById('senderHint').textContent = profileName;
+  document.getElementById('profileLabel').textContent = profileName;
   if (sourceFileName && lastStats) rerunCurrentFile();
+}
+
+function getProfileName(name) {
+  if (name === 'Felix') return 'Recruiting profile';
+  if (name === 'Gunter') return 'LiquidSMARTS medtech profile';
+  return 'Default consultant profile';
 }
 
 function openFilePicker() {
@@ -956,6 +1021,14 @@ function qualifyRow(row) {
     if (!findKeyword(searchText, FELIX_ICP_REQUIRED)) return { pass: false, type: 'notIcp', reason: 'No recruiting ICP signal' };
     if (!findKeyword(searchText, FELIX_TITLES)) return { pass: false, type: 'notIcp', reason: 'No decision-maker title' };
     return { pass: true };
+  }
+
+  if (selectedSender === 'Gunter') {
+    const hardKeyword = findKeyword(searchText, GUNTER_HARD_EXCLUDE);
+    if (hardKeyword) return { pass: false, type: 'hardExclude', reason: `Excluded: ${hardKeyword}` };
+    if (!findKeyword(searchText, GUNTER_TITLES)) return { pass: false, type: 'notIcp', reason: 'No commercial leader title' };
+    if (!findKeyword(searchText, GUNTER_ICP_REQUIRED)) return { pass: false, type: 'notIcp', reason: 'No medtech or high-tech healthcare signal' };
+    return { pass: true, trigger: findKeyword(searchText, GUNTER_TRIGGER_SIGNALS) };
   }
 
   const hardKeyword = findKeyword(searchText, HARD_EXCLUDE);

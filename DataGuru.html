@@ -683,6 +683,31 @@ const FELIX_TITLES = [
   'chief', 'managing director', 'md', 'president'
 ];
 
+// Sara / Hampton ICP - senior founders in marketing and business-content services.
+const SARA_HARD_EXCLUDE = [
+  'government administration', 'government relations services', 'government relations',
+  'fundraising', 'funds and trusts', 'charity', 'nonprofit', 'non-profit', 'ngo',
+  'student', 'graduate', 'intern',
+  'recruiter', 'recruitment', 'staffing',
+  'financial advisor', 'financial adviser', 'wealth manager',
+  'mortgage', 'real estate', 'estate agent',
+  'life coach', 'wellness coach', 'mindset coach', 'therapist', 'psychotherapist',
+  'software engineer', 'developer', 'data scientist', 'data analyst',
+  'accountant', 'bookkeeper', 'tax advisor'
+];
+
+const SARA_ICP_REQUIRED = [
+  'marketing services', 'marketing service', 'marketing',
+  'digital accessibility services', 'digital accessibility', 'accessibility services',
+  'business content', 'content strategy', 'content marketing', 'branded content',
+  'copywriting', 'brand content', 'business development'
+];
+
+const SARA_TITLES = [
+  'founder', 'co-founder', 'owner', 'chief executive officer', 'ceo',
+  'managing director', 'md'
+];
+
 // Gunter / LiquidSMARTS ICP - high-tech healthcare commercial leaders
 const GUNTER_HARD_EXCLUDE = [
   'sales representative', 'sales rep', 'account executive', 'account exec',
@@ -770,10 +795,14 @@ const ACTIVE_CLIENTS = new Set([
 ].map(normalizeName));
 
 const COLUMN_ALIASES = {
-  name: ['full_name', 'Full Name', 'Name', 'full name', 'profile_name'],
+  name: ['full_name', 'Full Name', 'Name', 'full name', 'profile_name', 'Lead Name', 'Person Name'],
+  firstName: ['first_name', 'First Name', 'First name', 'firstName'],
+  lastName: ['last_name', 'Last Name', 'Last name', 'lastName'],
   headline: ['headline', 'Headline', 'Title', 'title'],
   company: ['current_company', 'Current Company', 'Company', 'companyName'],
   position: ['current_company_position', 'Current Company Position', 'Position', 'Job Title', 'current_position'],
+  industry: ['industry', 'Industry', 'Company Industry', 'company_industry', 'current_company_industry'],
+  companyHeadcount: ['company_headcount', 'Company Headcount', 'Company size', 'Company Size', 'current_company_headcount'],
   location: ['location_name', 'Location', 'location', 'Geo'],
   url: ['profile_url', 'Profile URL', 'LinkedIn URL', 'linkedin_url', 'url']
 };
@@ -862,6 +891,7 @@ function selectSender(name) {
 }
 
 function getProfileName(name) {
+  if (name === 'Sara') return 'Hampton marketing services founder profile';
   if (name === 'Felix') return 'Recruiting profile';
   if (name === 'Gunter') return 'LiquidSMARTS medtech profile';
   return 'Default consultant profile';
@@ -997,13 +1027,24 @@ function processCSV(text) {
 function enrichRow(row) {
   return {
     raw: row,
-    name: pick(row, COLUMN_ALIASES.name),
+    name: pickName(row),
     headline: pick(row, COLUMN_ALIASES.headline),
     company: pick(row, COLUMN_ALIASES.company),
     position: pick(row, COLUMN_ALIASES.position),
+    industry: pick(row, COLUMN_ALIASES.industry),
+    companyHeadcount: pick(row, COLUMN_ALIASES.companyHeadcount),
     location: pick(row, COLUMN_ALIASES.location),
     url: pick(row, COLUMN_ALIASES.url)
   };
+}
+
+function pickName(row) {
+  const directName = pick(row, COLUMN_ALIASES.name);
+  if (directName) return directName;
+
+  const firstName = pick(row, COLUMN_ALIASES.firstName);
+  const lastName = pick(row, COLUMN_ALIASES.lastName);
+  return [firstName, lastName].filter(Boolean).join(' ').trim();
 }
 
 function pick(row, aliases) {
@@ -1016,10 +1057,18 @@ function pick(row, aliases) {
 
 function qualifyRow(row) {
   const name = normalizeName(row.name);
-  const searchText = normalizeText(`${row.headline} ${row.position} ${row.company}`);
+  const searchText = normalizeText(`${row.headline} ${row.position} ${row.company} ${row.industry} ${row.companyHeadcount} ${row.location}`);
 
   if (!name) return { pass: false, type: 'missingName', reason: 'Missing name' };
   if (ACTIVE_CLIENTS.has(name)) return { pass: false, type: 'activeClient', reason: 'Active client' };
+
+  if (selectedSender === 'Sara') {
+    const hardKeyword = findKeyword(searchText, SARA_HARD_EXCLUDE);
+    if (hardKeyword) return { pass: false, type: 'hardExclude', reason: `Excluded: ${hardKeyword}` };
+    if (!findKeyword(searchText, SARA_TITLES)) return { pass: false, type: 'notIcp', reason: 'No founder/owner/MD title' };
+    if (!findKeyword(searchText, SARA_ICP_REQUIRED)) return { pass: false, type: 'notIcp', reason: 'No Hampton marketing services signal' };
+    return { pass: true };
+  }
 
   if (selectedSender === 'Felix') {
     const hardKeyword = findKeyword(searchText, FELIX_HARD_EXCLUDE);

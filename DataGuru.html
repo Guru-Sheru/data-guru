@@ -683,7 +683,7 @@ const FELIX_TITLES = [
   'chief', 'managing director', 'md', 'president'
 ];
 
-// Sara / Hampton ICP - senior founders in marketing and business-content services.
+// Sara ICP - senior founders in marketing and business-content services.
 const SARA_HARD_EXCLUDE = [
   'government administration', 'government relations services', 'government relations',
   'fundraising', 'funds and trusts', 'charity', 'nonprofit', 'non-profit', 'ngo',
@@ -891,7 +891,7 @@ function selectSender(name) {
 }
 
 function getProfileName(name) {
-  if (name === 'Sara') return 'Hampton marketing services founder profile';
+  if (name === 'Sara') return 'Sara Sales Navigator profile';
   if (name === 'Felix') return 'Recruiting profile';
   if (name === 'Gunter') return 'LiquidSMARTS medtech profile';
   return 'Default consultant profile';
@@ -1095,7 +1095,7 @@ function qualifyRow(row) {
     const hardKeyword = findKeyword(searchText, SARA_HARD_EXCLUDE);
     if (hardKeyword) return { pass: false, type: 'hardExclude', reason: `Excluded: ${hardKeyword}` };
     if (!findKeyword(searchText, SARA_TITLES)) return { pass: false, type: 'notIcp', reason: 'No founder/owner/MD title' };
-    if (!findKeyword(searchText, SARA_ICP_REQUIRED)) return { pass: false, type: 'notIcp', reason: 'No Hampton marketing services signal' };
+    if (!findKeyword(searchText, SARA_ICP_REQUIRED)) return { pass: false, type: 'notIcp', reason: 'No Sara ICP signal' };
     return { pass: true };
   }
 
